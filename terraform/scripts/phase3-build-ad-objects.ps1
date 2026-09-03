@@ -2,14 +2,38 @@
 # SOP Step 5 — Group Policy Object (the two registry-backed settings only —
 #              see the note near the bottom about Password Policy)
 # SOP Verification section
+# Plus: OpenSSH Server enablement (not part of the SOP — see note below)
 #
 # Run by the Custom Script Extension defined in ad-objects.tf, AFTER Phase 2's
 # reboot has completed and lab.local is answering as a domain.
+#
+# Why OpenSSH is bolted on here instead of its own extension: Azure Windows
+# VMs only allow ONE Microsoft.Compute.CustomScriptExtension per VM, ever.
+# Phase 2 already occupies that slot, so this had to become the second and
+# last script instead of a third, separate one.
 
 param(
     [Parameter(Mandatory = $true)][string]$UserPassword
 )
 
+# --- OpenSSH Server (not part of the SOP) ---
+# Lets VS Code's "Remote - SSH" extension connect directly to this VM,
+# giving you a real integrated terminal on the box without RDP.
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+Start-Service sshd
+Set-Service -Name sshd -StartupType Automatic
+
+if (-not (Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue)) {
+    New-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -DisplayName "OpenSSH Server (sshd)" `
+      -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+}
+
+New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell `
+  -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" `
+  -PropertyType String -Force
+
+# --- Step 4: Active Directory objects ---
 Import-Module ActiveDirectory
 
 # --- Step 4.1: Organizational Units ---
