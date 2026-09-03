@@ -1,0 +1,16 @@
+# Copy this file to terraform.tfvars and fill in real values.
+# terraform.tfvars is in .gitignore — never commit real passwords or push
+# this file to GitHub with actual secrets in it.
+
+admin_password = "ReplaceMe-Str0ng!Passw0rd"
+dsrm_password  = "ReplaceMe-DSRM!Passw0rd"
+
+# Find yours at https://whatismyip.com and add /32
+my_ip_cidr = "203.0.113.5/32"
+
+# Once you've pushed the scripts/ folder to your GitHub repo, point these at
+# the raw file URLs, e.g.:
+# https://raw.githubusercontent.com/<you>/it-labs-portfolio/main/lab-1-active-directory/terraform/scripts/phase2-install-and-promote.ps1
+phase0_script_url = "https://raw.githubusercontent.com/<you>/it-labs-portfolio/main/lab-1-active-directory/terraform/scripts/phase0-enable-openssh.ps1"
+phase2_script_url = "https://raw.githubusercontent.com/<you>/it-labs-portfolio/main/lab-1-active-directory/terraform/scripts/phase2-install-and-promote.ps1"
+phase3_script_url = "https://raw.githubusercontent.com/<you>/it-labs-portfolio/main/lab-1-active-directory/terraform/scripts/phase3-build-ad-objects.ps1"
