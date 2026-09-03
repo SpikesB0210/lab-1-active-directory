@@ -20,5 +20,4 @@ resource "azurerm_virtual_machine_extension" "build_ad_objects" {
     commandToExecute = "powershell -ExecutionPolicy Unrestricted -File phase3-build-ad-objects.ps1 -UserPassword \"${var.admin_password}\""
   })
 
-  depends_on = [azurerm_virtual_machine_extension.install_and_promote]
-}
+    depends_on = [azurerm_windows_virtual_machine.dc01]
